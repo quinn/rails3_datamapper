@@ -13,7 +13,7 @@ require 'active_model/railtie'
 require 'action_controller/railtie'
 
 require 'rails3_datamapper/setup'
-require "rails3_datamapper/railties/log_subscriber"
+require "rails3_datamapper/railties/subscriber"
 require "rails3_datamapper/railties/routing_support"
 require "rails3_datamapper/railties/i18n_support"
 
@@ -25,7 +25,7 @@ module Rails
 
       railtie_name :data_mapper
 
-      log_subscriber ::DataMapper::Railties::LogSubscriber.new
+      subscriber ::DataMapper::Railties::Subscriber.new
 
       config.generators.orm :data_mapper, :migration => true
 
