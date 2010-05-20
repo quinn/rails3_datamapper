@@ -1,7 +1,7 @@
 require 'active_support/core_ext/hash/except'
 
-require 'rails3_datamapper/configuration'
-require 'rails3_datamapper/adapters'
+require 'dm-rails/configuration'
+require 'dm-rails/railties/benchmarking_mixin'
 
 module Rails
   module DataMapper
@@ -21,7 +21,7 @@ module Rails
     def self.setup_with_instrumentation(name, options)
       puts "[datamapper] Setting up #{name.inspect} repository: '#{options['database']}' on #{options['adapter']}"
       adapter = ::DataMapper.setup(name, options)
-      ::DataMapper::Repository.adapters[adapter.name] = adapter_cascade(adapter)
+      adapter.extend ::DataMapper::Adapters::Benchmarking
     end
 
     def self.initialize_foreign_keys
@@ -30,8 +30,11 @@ module Rails
       end
     end
 
-    def self.adapter_cascade(adapter)
-      Adapters::Cascade.instantiate(adapter)
+    def self.preload_models(app)
+      app.config.paths.app.models.each do |path|
+        Dir.glob("#{path}/**/*.rb").sort.each { |file| require_dependency file }
+      end
+      initialize_foreign_keys
     end
 
   end

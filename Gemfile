@@ -1,50 +1,37 @@
-# Setup your complete development environment by running the following:
-#
-#   gem install bundler #if you haven't done so before
-#   bundle install
-#   rake spec
-#
+source 'http://rubygems.org'
 
-source 'http://gemcutter.org'
+DATAMAPPER = 'git://github.com/datamapper'
+DM_VERSION = '~> 1.0.0.rc2'
 
-gem 'rake'
+group :runtime do
 
-gem 'yard',           '~> 0.5'
+  git 'git://github.com/rails/rails.git' do
 
-gem 'data_objects',   '~> 0.10.1'
-gem 'do_sqlite3',     '~> 0.10.1'
+    gem 'activesupport', '~> 3.0.0.beta3', :require => 'active_support'
+    gem 'actionpack',    '~> 3.0.0.beta3', :require => 'action_pack'
+    gem 'railties',      '~> 3.0.0.beta3', :require => 'rails'
 
-git 'git://github.com/carlhuda/bundler.git'
+  end
 
-gem 'bundler',        '~> 0.9.3'
+  gem 'dm-core',         DM_VERSION, :git => "#{DATAMAPPER}/dm-core.git"
+  gem 'dm-active_model', DM_VERSION, :git => "#{DATAMAPPER}/dm-active_model.git"
 
-git 'git://github.com/rails/rails.git'
-
-gem 'activesupport',  '~> 3.0.0.beta1', :require => 'active_support'
-gem 'actionpack',     '~> 3.0.0.beta1', :require => 'action_pack'
-gem 'railties',       '~> 3.0.0.beta1', :require => 'rails'
-
-git 'git://github.com/snusnu/dm-core.git', 'branch' => 'active_support'
-git 'git://github.com/snusnu/dm-more.git', 'branch' => 'active_support'
-
-gem 'dm-core',        '~> 0.10.2'
-gem 'dm-types',       '~> 0.10.2'
-gem 'dm-validations', '~> 0.10.2'
-gem 'dm-constraints', '~> 0.10.2'
-gem 'dm-aggregates',  '~> 0.10.2'
-gem 'dm-timestamps',  '~> 0.10.2'
-gem 'dm-migrations',  '~> 0.10.2'
-gem 'dm-observer',    '~> 0.10.2'
-
-git 'git://github.com/snusnu/dm-active_model.git'
-
-gem 'dm-active_model', '~> 0.3'
-
-
-group(:test) do
-  gem 'rspec',        '~> 1.3', :require => 'spec'
 end
 
-group(:development) do
-  gem 'jeweler',      '~> 1.4'
+group :development do
+
+  gem 'rake',            '~> 0.8.7'
+  gem 'jeweler',         '~> 1.4'
+
+end
+
+group :quality do # These gems contain rake tasks that check the quality of the source code
+
+  gem 'metric_fu',       '~> 1.3'
+  gem 'rcov',            '~> 0.9.7'
+  gem 'reek',            '~> 1.2.7'
+  gem 'roodi',           '~> 2.1'
+  gem 'yard',            '~> 0.5'
+  gem 'yardstick',       '~> 0.1'
+
 end

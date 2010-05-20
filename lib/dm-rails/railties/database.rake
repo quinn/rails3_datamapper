@@ -1,5 +1,5 @@
-require 'rails3_datamapper/setup'
-require 'rails3_datamapper/storage'
+require 'dm-rails/setup'
+require 'dm-rails/storage'
 
 namespace :db do
 
@@ -47,6 +47,7 @@ namespace :db do
 
   desc 'Perform destructive automigration of all repositories in the current Rails.env'
   task :automigrate => :load_models do
+    require 'dm-migrations'
     Rails::DataMapper.configuration.repositories[Rails.env].each do |repository, config|
       ::DataMapper.auto_migrate!(repository.to_sym)
       puts "[datamapper] Finished auto_migrate! for :#{repository} repository '#{config['database']}'"
@@ -62,6 +63,7 @@ namespace :db do
 
   desc 'Perform non destructive automigration of all repositories in the current Rails.env'
   task :autoupgrade => :load_models do
+    require 'dm-migrations'
     Rails::DataMapper.configuration.repositories[Rails.env].each do |repository, config|
       ::DataMapper.auto_upgrade!(repository.to_sym)
       puts "[datamapper] Finished auto_upgrade! for :#{repository} repository '#{config['database']}'"
@@ -106,14 +108,14 @@ namespace :db do
   namespace :sessions do
     desc "Creates the sessions table for DataMapperStore"
     task :create => :environment do
-      require 'rails3_datamapper/session_store'
+      require 'dm-rails/session_store'
       Rails::DataMapper::SessionStore::Session.auto_migrate!
       puts "Created '#{Rails::DataMapper.configurations[Rails.env]['database']}.sessions'"
     end
 
     desc "Clear the sessions table for DataMapperStore"
     task :clear => :environment do
-      require 'rails3_datamapper/session_store'
+      require 'dm-rails/session_store'
       Rails::DataMapper::SessionStore::Session.all.destroy!
       puts "Deleted entries from '#{Rails::DataMapper.configurations[Rails.env]['database']}.sessions'"
     end
